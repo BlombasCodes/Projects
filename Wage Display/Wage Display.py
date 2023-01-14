@@ -1,12 +1,15 @@
 from time import time
 import PySimpleGUI as sg
 
+#TODO: Continue time count when no input given
+#TODO: Clear $ from .01 to .00 when no input given
+#TODO: Align time controls in a cleaner way.
 def create_window():
     sg.theme('DarkGrey10')
     layout = [
     [sg.Text('$0.00',font='Franklin 30',key='-TOTAL-',text_color='#56a832')],
+    [sg.Text('Salary:', font='Franklin 20',),sg.Text('----',font='Franklin 30',key='-INPUTSALARY-',text_color='#56a832')],
     [sg.Text('Hourly:', font='Franklin 20',),sg.Input(key='-INPUT-')],
-    [sg.Text('Salary:', font='Franklin 20',),sg.Input(key = '-INPUTSALARY-')],
     [sg.Button('Start', button_color=('#FFFFFF','#38761d'),border_width=3,size=(10,2),key='-STARTSTOP-')],
     [sg.Text('Minutes',font='Franklin 20'),sg.VSeperator(),sg.Text('Hours',font="Franklin 20"), ],
     [
@@ -40,8 +43,13 @@ def wage_time(wage,elapsed_time):
     return delimiter.join([str(value) for value in wageupdate])#List comprehension to convert tuple to string and print return.
 
 def update_Salary(values):
-    salary = int(values) * 40 * 52
-    window.Element('-INPUTSALARY-').update(salary)
+
+        if input_value != '':
+            salary = int(values) * 40 * 52
+            salary_text = ('$' + (format (salary,',d')))
+            window.Element('-INPUTSALARY-').update(salary_text)
+        else:
+            window.Element('-INPUTSALARY-').update('0')
 
 
 window = create_window()
@@ -79,6 +87,8 @@ while True:
     if active:#Detects if active before updating screen
         input_value = values['-INPUT-']
         update_Salary(values['-INPUT-'])
+
+
         if input_value.isnumeric():
 
             
