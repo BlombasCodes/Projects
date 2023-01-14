@@ -1,9 +1,6 @@
 from time import time
 import PySimpleGUI as sg
 
-#TODO: Continue time count when no input given
-#TODO: Clear $ from .01 to .00 when no input given
-#TODO: Align time controls in a cleaner way.
 def create_window():
     sg.theme('DarkGrey10')
     layout = [
@@ -11,11 +8,8 @@ def create_window():
     [sg.Text('Salary:', font='Franklin 20',),sg.Text('----',font='Franklin 30',key='-INPUTSALARY-',text_color='#56a832')],
     [sg.Text('Hourly:', font='Franklin 20',),sg.Input(key='-INPUT-')],
     [sg.Button('Start', button_color=('#FFFFFF','#38761d'),border_width=3,size=(10,2),key='-STARTSTOP-')],
-    [sg.Text('Minutes',font='Franklin 20'),sg.VSeperator(),sg.Text('Hours',font="Franklin 20"), ],
-    [
-    sg.Button('+1',font='Franklin 10',key='-ADDMINUTE-', enable_events= True),sg.Button('+5',font='Franklin 10',key='-ADD5MINUTE-', enable_events= True),
-    sg.Button('+1',font='Franklin 10',key='-ADDHOUR-',enable_events= True),sg.Button('+2',font='Franklin 10',key='-ADD2HOUR-',enable_events= True)
-    ],
+    [sg.Button('Add Minutes',font='Franklin 10',key='-ADDMINUTE-', enable_events= True),sg.Input(key='-MINUTEINPUT-', enable_events= True,size=(20,10)),sg.Push() ],
+    [sg.Button('Add Hours',font='Franklin 10',key='-ADDHOUR-',enable_events= True),sg.Input(key='-HOURINPUT-', enable_events= True,size=(20,10)),sg.Push()],
     [sg.VPush()],
         ]
     return sg.Window('Money Machine', layout,size=(500,300),no_titlebar = False,element_justification='center')
@@ -43,8 +37,8 @@ def wage_time(wage,elapsed_time):
     return delimiter.join([str(value) for value in wageupdate])#List comprehension to convert tuple to string and print return.
 
 def update_Salary(values):
-
-        if input_value != '':
+        
+        if values.isdigit():
             salary = int(values) * 40 * 52
             salary_text = ('$' + (format (salary,',d')))
             window.Element('-INPUTSALARY-').update(salary_text)
@@ -93,13 +87,17 @@ while True:
 
             
             if event == '-ADDMINUTE-':#Increments minutes
-                minutes_added += 1
-            if event == '-ADD5MINUTE-':#Increments minutes
-                minutes_added += 5
-            if event == '-ADDHOUR-':#Increments minutes
-                hours_added += 1
-            if event == '-ADD2HOUR-':#Increments minutes
-                hours_added += 2
+                if values["-MINUTEINPUT-"].isdigit():
+                    minutes_added += int(values['-MINUTEINPUT-'])
+                else:#Default case add one minute
+                    hours_added+= 1
+                    
+            if event == '-ADDHOUR-':#Increments hours
+                if values['-HOURINPUT-'].isdigit():
+                    
+                    hours_added += int(values['-HOURINPUT-'])
+                else:#Default case add one hour
+                    hours_added+=1
 
                 
             total_time = time() + (60 * minutes_added) + (3600 * hours_added)
