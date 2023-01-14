@@ -1,5 +1,5 @@
 # WAGE DISPLAY
-## Created using pysimplegui
+
 Wage display was created to help visualize your income. 
 How many cents do you make per second? How long would an hour feel if you just watched your income?
 What is it like to make $1000 an hour?
